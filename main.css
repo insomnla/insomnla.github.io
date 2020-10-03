@@ -196,6 +196,12 @@ body {
 @media (max-width: 1200px) {
     .address, .address-bin, .netmask, .netmask-bin, .network, .network-bin, .broadcast, .broadcast-bin, .first-host, .first-host-bin, .last-host, .last-host-bin  {
         width: 100%;
+    }
+}
+
+@media (max-width: 700px) {
+    .address, .address-bin, .netmask, .netmask-bin, .network, .network-bin, .broadcast, .broadcast-bin, .first-host, .first-host-bin, .last-host, .last-host-bin  {
+        width: 100%;
         font-size: 15px;
     }
 }
