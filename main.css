@@ -202,6 +202,6 @@ body {
 @media (max-width: 650px) {
     .address, .address-bin, .netmask, .netmask-bin, .network, .network-bin, .broadcast, .broadcast-bin, .first-host, .first-host-bin, .last-host, .last-host-bin  {
         width: 100%;
-        font-size: 15px;
+        font-size: 13px;
     }
 }
