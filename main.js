@@ -1,4 +1,4 @@
-const regExpEnter = /^[0-9.]{0,16}$/;
+const regExpEnter = /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/;
 
 let inputForm = document.querySelector('.input-form');
 let outputForm = document.querySelector('.output-form');
@@ -9,12 +9,12 @@ let ipError2 = document.querySelector('#error-label2');
 let button2 = document.querySelector('#button2');
 
 
-
 inputForm.addEventListener ('submit', function(event) {
     event.preventDefault();
     let ipAddress = inputIp.value;
     let ipMask = inputMask.value;
     let error = 0;
+
 
     if (!regExpEnter.test(ipAddress)) {
         inputIp.classList.add('input-box__input--error');
@@ -26,18 +26,6 @@ inputForm.addEventListener ('submit', function(event) {
         ipError.style.display = 'none';
         inputIp.classList.remove('input-box__input--error');
         document.querySelector('#label1').classList.remove('input-box__label--error')
-        error -= 1;
-    }
-    if (!regExpEnter.test(ipMask)) {
-        inputMask.classList.add('input-box__input--error');
-        document.querySelector('#label2').classList.add('input-box__label--error')
-        ipError2.style.display = 'block';
-        ipError2.innerHTML = 'Некорректный адрес Маски';
-        error += 1;
-    } else {
-        ipError2.style.display = 'none';
-        inputMask.classList.remove('input-box__input--error');
-        document.querySelector('#label2').classList.remove('input-box__label--error')
         error -= 1;
     }
 
@@ -52,9 +40,13 @@ inputForm.addEventListener ('submit', function(event) {
     let intAddress3 = parseInt(arrayIp[2], 10);
     let intAddress4 = parseInt(arrayIp[3], 10);
 
-    let sumIp = (intAddress1 * (Math.pow(2, 24))) + (intAddress2 * (Math.pow(2, 16))) + (intAddress3 * (Math.pow(2, 8))) + intAddress4;
+    let strAddress1 = intAddress1.toString(2);
+    let strAddress2 = intAddress2.toString(2);
+    let strAddress3 = intAddress3.toString(2);
+    let strAddress4 = intAddress4.toString(2);
 
-    let binSumIp = (sumIp).toString(2);
+    let binIp = (valid(strAddress1) + "." + valid(strAddress2) + "." + valid(strAddress3) + "." + valid(strAddress4));
+
 
     let arrayMask = ipMask.split('.');
     let intMask1 = parseInt(arrayMask[0], 10);
@@ -62,216 +54,112 @@ inputForm.addEventListener ('submit', function(event) {
     let intMask3 = parseInt(arrayMask[2], 10);
     let intMask4 = parseInt(arrayMask[3], 10);
 
-    let sumMask = (intMask1 * (Math.pow(2, 24))) + (intMask2 * (Math.pow(2, 16))) + (intMask3 * (Math.pow(2, 8))) + intMask4;
+    let strMask1 = intMask1.toString(2);
+    let strMask2 = intMask2.toString(2);
+    let strMask3 = intMask3.toString(2);
+    let strMask4 = intMask4.toString(2);
 
-    let binSumMask = (sumMask).toString(2);
+    let binMask = (valid(strMask1) + "." + valid(strMask2) + "." + valid(strMask3) + "." + valid(strMask4));
 
-    let binArrayIp = binSumIp.split('');
-    let binArrayMask = binSumMask.split('');
-    let allSum = new Array();
 
-    for (i = 0; i < 32; i++) {
-        allSum[i] = binArrayIp[i] * binArrayMask[i];
-    }
+    // network
 
-    // network 
+    let Ip = valid(strAddress1) + valid(strAddress2) + valid(strAddress3) + valid(strAddress4);
 
-    let arrayNetworkSum = new Array();
+    let arrayBinIp = Ip.split('');
 
-    for (i = 0; i < 32; i++) {
-        arrayNetworkSum[i] = allSum[i]
-    }
-
-    let networkBin = arrayNetworkSum.join('');
-    let intNetwork1 = networkBin.split('', 8);
-    for (i = 0; i < 8; i++) {
-        arrayNetworkSum.shift(i); 
-    }
-    let networkBin1 = arrayNetworkSum.join('');
-    let intNetwork2 = networkBin1.split('', 8);
-    for (i = 0; i < 8; i++) {
-        arrayNetworkSum.shift(i); 
-    }
-    let networkBin2 = arrayNetworkSum.join('');
-    let intNetwork3 = networkBin2.split('', 8);
-    for (i = 0; i < 8; i++) {
-        arrayNetworkSum.shift(i); 
-    }
-    let networkBin3 = arrayNetworkSum.join('');
-    let intNetwork4 = networkBin3.split('', 8);
+    let Mask = valid(strMask1) + valid(strMask2) + valid(strMask3) + valid(strMask4);
     
-    let strNetwork1 = intNetwork1.join('');
-    let strNetwork2 = intNetwork2.join('');
-    let strNetwork3 = intNetwork3.join('');
-    let strNetwork4 = intNetwork4.join('');
+    let arrayBinMask = Mask.split('');
 
-    let network1 = parseInt(strNetwork1, 2);
-    let network2 = parseInt(strNetwork2, 2);
-    let network3 = parseInt(strNetwork3, 2);
-    let network4 = parseInt(strNetwork4, 2);
-
-    let network = network1 + "." + network2 + "." + network3 + "." + network4;
-
-    // broadcast
-
-    let arrayBroadcastSum = new Array();
+    let arrayBinNetwork = new Array();
 
     for (i = 0; i < 32; i++) {
-        arrayBroadcastSum[i] = allSum[i]
+        arrayBinNetwork[i] = arrayBinIp[i] * arrayBinMask[i];
     }
 
-    let reverseSumMask = new Array();
-    let countZero;
+    let arrayBinNetwork2 = new Array();
 
-    for (i = 0; i < 32; i++) {
-        reverseSumMask[i] = binArrayMask[i];
-    }
+    arrayBinNetwork2 = createArray(arrayBinNetwork2, arrayBinNetwork);
 
-    reverseSumMask.reverse();
+    let arrayNetwork = dec(arrayBinNetwork2);
 
-    for (countZero = 0; countZero < 32; countZero++) {
-        if (reverseSumMask[countZero] == 1) {
+    let network = arrayNetwork[0];
+    let binNetwork = arrayNetwork[1];
+
+    // broadcast 
+
+
+    let arrayBinBroadcast = new Array();
+
+    arrayBinBroadcast = createArray(arrayBinBroadcast, arrayBinNetwork);
+
+    let zero;
+
+    arrayBinMask.reverse();
+
+    for (zero = 0; zero < 32; zero++) {
+        if (arrayBinMask[zero] == '1') {
             break;
         }
     }
 
-    arrayBroadcastSum.reverse();
+    arrayBinMask.reverse();
 
-    for (i = 0; i < countZero; i++) {
-        arrayBroadcastSum[i] = 1;
+    arrayBinBroadcast.reverse();
+
+    for (i = 0; i < zero; i++) {
+        arrayBinBroadcast[i] = 1;
     }
 
-    arrayBroadcastSum.reverse();
+    arrayBinBroadcast.reverse();
 
-    let arrayLastHostSum = new Array();
+    let arrayBinLastHost = new Array();
 
-    for (i = 0; i < 32; i++) {
-        arrayLastHostSum[i] = arrayBroadcastSum[i];
-    }
+    arrayBinLastHost = createArray(arrayBinLastHost, arrayBinBroadcast);
 
-    let binBroadcastIp = arrayBroadcastSum.join("");
+    let arrayBroadcast = dec(arrayBinBroadcast);
 
-    let strBroadcastIp = arrayBroadcastSum.join('');
-    let intBroadcastIp1 = strBroadcastIp.split('', 8);
-    for (i = 0; i < 8; i++) {
-        arrayBroadcastSum.shift(i); 
-    }
-    let strBroadcastIp1 = arrayBroadcastSum.join('');
-    let intBroadcastIp2 = strBroadcastIp1.split('', 8);
-    for (i = 0; i < 8; i++) {
-        arrayBroadcastSum.shift(i); 
-    }
-    let strBroadcastIp2 = arrayBroadcastSum.join('');
-    let intBroadcastIp3 = strBroadcastIp2.split('', 8);
-    for (i = 0; i < 8; i++) {
-        arrayBroadcastSum.shift(i); 
-    }
-    let strBroadcastIp3 = arrayBroadcastSum.join('');
-    let intBroadcastIp4 = strBroadcastIp3.split('', 8);
-
-    let strBinBroadcastIp1 = intBroadcastIp1.join('');
-    let strBinBroadcastIp2 = intBroadcastIp2.join('');
-    let strBinBroadcastIp3 = intBroadcastIp3.join('');
-    let strBinBroadcastIp4 = intBroadcastIp4.join('');
-
-    let broadcastIp1 = parseInt(strBinBroadcastIp1, 2);
-    let broadcastIp2 = parseInt(strBinBroadcastIp2, 2);
-    let broadcastIp3 = parseInt(strBinBroadcastIp3, 2);
-    let broadcastIp4 = parseInt(strBinBroadcastIp4, 2);
-
-    let broadcastIp = broadcastIp1 + "." + broadcastIp2 + "." + broadcastIp3 + "." + broadcastIp4;
+    let broadcast = arrayBroadcast[0];
+    let binBroadcast = arrayBroadcast[1];
 
     // firstHost
 
-    let arrayFirstHostSum = new Array();
 
-    for (i = 0; i < 32; i++) {
-        arrayFirstHostSum[i] = allSum[i];
-    }
+    let arrayBinFirstHost = new Array();
 
-    arrayFirstHostSum.reverse();
-    arrayFirstHostSum[0] = 1;
-    arrayFirstHostSum.reverse();
-    let binFirstHost = arrayFirstHostSum.join("");
+    arrayBinFirstHost = createArray(arrayBinFirstHost, arrayBinNetwork);
 
-    let strFirstHost = arrayFirstHostSum.join('');
-    let intFirstHost1 = strFirstHost.split('', 8);
-    for (i = 0; i < 8; i++) {
-        arrayFirstHostSum.shift(i); 
-    }
-    let strFirstHost1 = arrayFirstHostSum.join('');
-    let intFirstHost2 = strFirstHost1.split('', 8);
-    for (i = 0; i < 8; i++) {
-        arrayFirstHostSum.shift(i); 
-    }
-    let strFirstHost2 = arrayFirstHostSum.join('');
-    let intFirstHost3 = strFirstHost2.split('', 8);
-    for (i = 0; i < 8; i++) {
-        arrayFirstHostSum.shift(i); 
-    }
-    let strFirstHost3 = arrayFirstHostSum.join('');
-    let intFirstHost4 = strFirstHost3.split('', 8);
+    arrayBinFirstHost[31] = 1;
 
-    let strBinFirstHost1 = intFirstHost1.join('');
-    let strBinFirstHost2 = intFirstHost2.join('');
-    let strBinFirstHost3 = intFirstHost3.join('');
-    let strBinFirstHost4 = intFirstHost4.join('');
+    let arrayFirstHost = dec(arrayBinFirstHost);
 
-    let firstHost1 = parseInt(strBinFirstHost1, 2);
-    let firstHost2 = parseInt(strBinFirstHost2, 2);
-    let firstHost3 = parseInt(strBinFirstHost3, 2);
-    let firstHost4 = parseInt(strBinFirstHost4, 2);
+    let firstHost = arrayFirstHost[0];
+    let binFirstHost = arrayFirstHost[1];
 
-    let firstHost = firstHost1 + "." + firstHost2 + "." + firstHost3 + "." + firstHost4;
+    // lastHost 
 
-    // lastHost
-    arrayLastHostSum[31] = 0;
+    arrayBinLastHost[31] = 0;
 
-    let binLastHost = arrayLastHostSum.join('');
+    let arrayLastHost = dec(arrayBinLastHost);
 
-    let strLastHost = arrayLastHostSum.join('');
-    let intLastHost1 = strLastHost.split('', 8);
-    for (i = 0; i < 8; i++) {
-        arrayLastHostSum.shift(i); 
-    }
-    let strLastHost1 = arrayLastHostSum.join('');
-    let intLastHost2 = strLastHost1.split('', 8);
-    for (i = 0; i < 8; i++) {
-        arrayLastHostSum.shift(i); 
-    }
-    let strLastHost2 = arrayLastHostSum.join('');
-    let intLastHost3 = strLastHost2.split('', 8);
-    for (i = 0; i < 8; i++) {
-        arrayLastHostSum.shift(i); 
-    }
-    let strLastHost3 = arrayLastHostSum.join('');
-    let intLastHost4 = strLastHost3.split('', 8);
-
-    let strBinLastHost1 = intLastHost1.join('');
-    let strBinLastHost2 = intLastHost2.join('');
-    let strBinLastHost3 = intLastHost3.join('');
-    let strBinLastHost4 = intLastHost4.join('');
-
-    let lastHost1 = parseInt(strBinLastHost1, 2);
-    let lastHost2 = parseInt(strBinLastHost2, 2);
-    let lastHost3 = parseInt(strBinLastHost3, 2);
-    let lastHost4 = parseInt(strBinLastHost4, 2);
-
-    let lastHost = lastHost1 + "." + lastHost2 + "." + lastHost3 + "." + lastHost4;
+    let lastHost = arrayLastHost[0];
+    let binLastHost = arrayLastHost[1];
 
 
-    document.querySelector('.address').textContent = "Ваш адрес: " + ipAddress;
-    document.querySelector('.address-bin').textContent = "Ваш адрес в бинарном виде: " + binSumIp;
-    document.querySelector('.netmask').textContent = "Ваша маска: " + ipMask;
-    document.querySelector('.netmask-bin').textContent = "Ваша маска в бинарном виде: " + binSumMask;
-    document.querySelector('.network').textContent = "Ваша рабочая область: " + network;
-    document.querySelector('.network-bin').textContent = "Ваша рабочая область в бинарном виде: " + networkBin;
-    document.querySelector('.broadcast').textContent = "Ваш широковещательный адрес: " + broadcastIp;
-    document.querySelector('.broadcast-bin').textContent = "Ваш широковещательный адрес в бинарном виде: " + binBroadcastIp;
-    document.querySelector('.first-host').textContent = "Ваш первый host: " + firstHost;
-    document.querySelector('.first-host-bin').textContent = "Ваш первый host в бинарном виде: " + binFirstHost;
-    document.querySelector('.last-host').textContent = "Ваш последный host: " + lastHost;
-    document.querySelector('.last-host-bin').textContent = "Ваш последный host в бинарном виде: " + binLastHost;
+
+    addInHTML('.address', 'Ваш адрес: ', ipAddress);
+    addInHTML('.address-bin', '', binIp);
+    addInHTML('.netmask', 'Ваша маска: ', ipMask);
+    addInHTML('.netmask-bin', '', binMask);
+    addInHTML('.network', 'Network: ', network);
+    addInHTML('.network-bin', '', binNetwork);
+    addInHTML('.broadcast', 'Broadcast ip: ', broadcast);
+    addInHTML('.broadcast-bin', '', binBroadcast);
+    addInHTML('.first-host', 'Первый адрес: ', firstHost);
+    addInHTML('.first-host-bin', '', binFirstHost);
+    addInHTML('.last-host', 'Последний адрес: ', lastHost);
+    addInHTML('.last-host-bin', '', binLastHost);
 
 })
 
@@ -279,3 +167,68 @@ button2.addEventListener('click', function(){
     inputForm.style.display = 'block';
     outputForm.style.display = 'none';
 })
+
+function valid(variable) {
+    arrayVariable = variable.split('');
+
+    arrayLengthVariable = 8 - arrayVariable.length;
+
+    for (i = 0; i < arrayLengthVariable; i++) {
+        arrayVariable.unshift(0);
+    }
+
+    variable = arrayVariable.join('');
+
+    return variable;
+}
+
+function addInHTML(clas, text,  variable) {
+    document.querySelector(clas).textContent = text + variable;
+}
+
+function dec(array) {
+    let strArray1 = array.join('');
+    let arrayNumber1 = strArray1.split('', 8);
+    let strArrayNumber1 = arrayNumber1.join('');
+    let intArrayNumber1 = parseInt(strArrayNumber1, 2);
+    for (i = 0; i < 8; i++) {
+        array.shift();
+    }
+
+    let strArray2 = array.join('');
+    let arrayNumber2 = strArray2.split('', 8);
+    let strArrayNumber2 = arrayNumber2.join('');
+    let intArrayNumber2 = parseInt(strArrayNumber2, 2);
+    for (i = 0; i < 8; i++) {
+        array.shift();
+    }
+
+    let strArray3 = array.join('');
+    let arrayNumber3 = strArray3.split('', 8);
+    let strArrayNumber3 = arrayNumber3.join('');
+    let intArrayNumber3 = parseInt(strArrayNumber3, 2);
+    for (i = 0; i < 8; i++) {
+        array.shift();
+    }
+
+    let strArray4 = array.join('');
+    let arrayNumber4 = strArray4.split('', 8);
+    let strArrayNumber4 = arrayNumber4.join('');
+    let intArrayNumber4 = parseInt(strArrayNumber4, 2);
+    for (i = 0; i < 8; i++) {
+        array.shift();
+    }
+
+    let binArrayNumber = strArrayNumber1 + "." + strArrayNumber2 + "." + strArrayNumber3 + "." + strArrayNumber4;
+
+    let intArrayNumber = intArrayNumber1 + "." + intArrayNumber2 + "." + intArrayNumber3 + "." + intArrayNumber4;
+
+    return [intArrayNumber, binArrayNumber];
+}
+
+function createArray(arrayNew, arrayExisting) {
+    for(i = 0; i < 32; i++) {
+        arrayNew[i] = arrayExisting[i];
+    }
+    return arrayNew;
+}
