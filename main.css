@@ -36,21 +36,30 @@ body {
 }
 
 .item {
-    width: calc(50% - 72px);
+    width: calc(100% - 32px);
     min-height: 15vh;
-    margin: 36px;
+    margin: 35px 16px 0 16px;
     display: flex;
     justify-content: center;
     align-items: center;
     background: rgba(0, 0, 0, 0.2);
+    border: 2px solid black;
+    transition: transform .6s ease;
 }
 
-.item a {
+.item:hover {
+    transform: translateY(-15px);
+}
+
+a {
+    width: 50%;
+    max-width: 300px;
+    min-width: 200px;
     display: block;
     color: #000;
     text-decoration: none;
 }
 
-.item a:visited {
+a:visited {
     color: #000;
 }
