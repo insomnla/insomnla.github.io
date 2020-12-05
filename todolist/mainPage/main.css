@@ -1,0 +1,43 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Header */
+.header {
+    background: #874FFF;
+}
+
+.header__inner{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 35px 50px;
+}
+
+
+
+
+
+
+/* Body */
+.after-header {
+    background: linear-gradient(to bottom, #874FFF, #DEDDFF);
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.center {
+    position: relative;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.right {
+    position: absolute;
+    top: 0;
+    right: 75px;
+}
