@@ -7,31 +7,62 @@
     <title>Main page</title>
 </head>
 <body>
-    <header class="header header--top">
-        <div class="container">
-            <div class="header__inner">
 
-
-                <form action="" class="search-form">
-                    <input type="search" placeholder="Найти задачу" class="search">
-                    <input type="image" class="img img--lens" src="/img/magnify.png">
-                </form>
-
-                <nav class="nav">
-                    <a href="" class="nav-item">
-                        <img src="/img/bell.png" alt="" class="img img--notif">
-                    </a>
-                    <a href="" class="nav-item">
-                        <img src="/img/pepohmm.png" alt="" class="img img--avatar">
-                        <div class="text text--header">
-                            Шило Сергей
-                        </div>
-                    </a>
-                </nav>
-
-
+    <main class="main">
+        <aside class="aside">
+            <div class="aside-item">
+                <img src="/img/asideUser.png" alt="" class="img img--aside">
+            </div>
+            <div class="aside-item  aside-item--active">
+                <img src="/img/to-do.png" alt="" class="img img--aside">
+            </div>
+            <div class="aside-item">
+                <img src="/img/luggage.png" alt="" class="img img--aside">
+            </div>
+        </aside>
+        <div class="modal-aside">
+            <div class="title">
+                Мои задачи
+            </div>
+            <div class="categoris">
+                <div class="categoris-item">
+                    Все задачи
+                </div>
+                <div class="categoris-item">
+                    Работа
+                </div>
+                <div class="categoris-item">
+                    Что-то ещё
+                </div>
             </div>
         </div>
-    </header>
+        <div class="main-content">
+            <header class="header header--top">
+                <div class="header__inner">
+
+
+                    <form action="" class="search-form">
+                        <input type="search" placeholder="Найти задачу" class="search">
+                        <input type="image" class="img img--lens" src="/img/magnify.png">
+                    </form>
+
+                    <nav class="nav">
+                        <a href="" class="nav-item">
+                            <img src="/img/bell.png" alt="" class="img img--notif">
+                        </a>
+                        <a href="" class="nav-item">
+                            <img src="/img/defaultUser.png" alt="" class="img img--avatar">
+                            <div class="text text--header">
+                                Шило Сергей
+                            </div>
+                        </a>
+                    </nav>
+
+
+                </div>
+            </header>            
+        </div>
+    </main>
+
 </body>
 </html>
